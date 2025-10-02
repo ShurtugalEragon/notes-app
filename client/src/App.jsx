@@ -1,35 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import { useState, useEffect } from 'react';
+
+async function getDocument() {
+  let doc = await fetch("http://127.0.0.1:8080/docs/1");
+  let data = await doc.json();
+  console.log(data.content);
+  return data.content;
+}
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [documentText, setDocumentText] = useState('');
+
+  useEffect(() => {
+    async function loadDoc() {
+      try {
+        let text = await getDocument();
+        setDocumentText(text);
+      } catch (err) {
+        console.log("Failed to load document", err);
+      }
+    }
+    loadDoc();
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <textarea value={documentText} onChange={e => setDocumentText(e.target.value)}></textarea>
+  );
 }
 
 export default App
