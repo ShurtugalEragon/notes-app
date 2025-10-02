@@ -1,47 +1,17 @@
 import './App.css'
-import { useState, useEffect } from 'react';
-
-async function getDocument() {
-  let doc = await fetch("http://127.0.0.1:8080/docs/1");
-  let data = await doc.json();
-  console.log(data.content);
-  return data.content;
-}
-
-async function saveDocument(text) {
-  let textObject = {content: text};
-  await fetch("http://127.0.0.1:8080/docs/1", {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(textObject)
-  });
-}
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import HomePage from './HomePage';
+import DocumentEditor from './DocumentEditor';
 
 function App() {
-  const [documentText, setDocumentText] = useState('');
-
-  useEffect(() => {
-    async function loadDoc() {
-      try {
-        let text = await getDocument();
-        setDocumentText(text);
-      } catch (err) {
-        console.log("Failed to load document", err);
-      }
-    }
-    loadDoc();
-  }, []);
-
   return (
-    <>
-    <div>
-      <textarea value={documentText} onChange={e => setDocumentText(e.target.value)}></textarea>
-    </div>
-    <button onClick={() => {saveDocument(documentText)}}>Save</button>
-    </>
-  );
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="docs/:id" element={<DocumentEditor />} />
+      </Routes>
+    </BrowserRouter>
+  )
 }
 
 export default App
