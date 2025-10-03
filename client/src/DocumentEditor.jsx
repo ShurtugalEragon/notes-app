@@ -1,9 +1,10 @@
 import {useEffect, useState} from 'react';
-import {useParams} from 'react-router';
+import {useParams, useNavigate} from 'react-router';
 
 function DocumentEditor() {
     const [text, setText] = useState('');
     const {id} = useParams();
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function getDoc() {
@@ -29,6 +30,7 @@ function DocumentEditor() {
                 <textarea value={text} onChange={e => setText(e.target.value)} rows="20" cols="75"/>
             </div>
             <button onClick={saveDoc}>Save</button>
+            <button onClick={() => {navigate("/")}}>Home</button>
         </>
     )
 }
