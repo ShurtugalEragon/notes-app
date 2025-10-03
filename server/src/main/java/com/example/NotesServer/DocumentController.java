@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,7 +48,6 @@ class DocumentController {
 	}
 	
 	@PostMapping
-	@CrossOrigin(exposedHeaders = "Location")
 	private ResponseEntity<DocumentSummary> createDocument(@RequestBody Map<String, String> body, UriComponentsBuilder ucb) {
 		int id = map.size() + 1;
 		
@@ -61,5 +61,14 @@ class DocumentController {
 		DocumentSummary documentSummary = new DocumentSummary(id, map.get(id).getTitle());
 		
 		return ResponseEntity.created(locationOfCreatedDocument).body(documentSummary);
+	}
+	
+	@DeleteMapping("/{id}")
+	private ResponseEntity<Void> deleteDocument(@PathVariable int id) {
+		if (map.containsKey(id)) {
+			map.remove(id);
+			return ResponseEntity.noContent().build();
+		}
+		return ResponseEntity.notFound().build();
 	}
 }

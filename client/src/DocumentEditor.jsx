@@ -23,6 +23,14 @@ function DocumentEditor() {
         });
     }
 
+    async function deleteDoc() {
+        await fetch(`http://127.0.0.1:8080/docs/${id}`, {
+            method: "DELETE",
+            headers: {"Content-Type": "application/json"}
+        });
+        navigate("/");
+    }
+
     return (
         <>
             <h1>Editing Document {id}</h1>
@@ -31,6 +39,7 @@ function DocumentEditor() {
             </div>
             <button onClick={saveDoc}>Save</button>
             <button onClick={() => {navigate("/")}}>Home</button>
+            <button onClick={deleteDoc}>Delete</button>
         </>
     )
 }
