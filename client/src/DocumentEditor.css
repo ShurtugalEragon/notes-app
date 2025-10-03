@@ -1,0 +1,24 @@
+#navbar {
+    display: flex;
+    list-style-type: none;
+    align-items: center;
+}
+
+#navbar li {
+    margin-right: 25px;
+}
+
+#editor {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#footer {
+    display: flex;
+}
+
+#footer button {
+    margin: 10px;
+}

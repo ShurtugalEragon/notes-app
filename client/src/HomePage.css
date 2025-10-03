@@ -1,0 +1,20 @@
+#documentList {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+#home {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#documentLink {
+    text-decoration: none;
+    color: black;
+    margin: 100px;
+}

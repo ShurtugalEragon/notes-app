@@ -35,7 +35,7 @@ class DocumentController {
 	@GetMapping("/{id}")
 	private ResponseEntity<Map<String, String>> getDocument(@PathVariable int id) {
 		if (map.containsKey(id)) {
-			return ResponseEntity.ok(Map.of("content", map.get(id).getContent()));
+			return ResponseEntity.ok(Map.of("title", map.get(id).getTitle(), "content", map.get(id).getContent())); 
 		}
 		return ResponseEntity.notFound().build();
 	}

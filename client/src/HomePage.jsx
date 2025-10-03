@@ -1,5 +1,6 @@
 import {useState, useEffect} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
+import './HomePage.css';
 
 function HomePage() {
     const [docs, setDocs] = useState([]);
@@ -26,17 +27,17 @@ function HomePage() {
     }
 
     return (
-        <>
+        <div id="home">
             <h1>My Documents</h1>
             <button onClick={createDocument}>Create Document</button>
-            <ul>
+            <div id="documentList">
                 {docs.map(doc => 
-                    <li key={doc.id}>
-                        <Link to={`/docs/${doc.id}`}>Document {doc.id}</Link>
-                    </li>
+                    // <li key={doc.id}>
+                        <Link to={`/docs/${doc.id}`} id="documentLink" key={doc.id}>Document {doc.id}</Link>
+                    // </li>
                 )}
-            </ul>
-        </>
+            </div>
+        </div>
     )
 }
 
