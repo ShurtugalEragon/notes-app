@@ -42,6 +42,10 @@ class DocumentController {
 	
 	@PutMapping("/{id}")
 	private ResponseEntity<Void> replaceDocument(@PathVariable int id, @RequestBody Map<String, String> body) {
+		if (!map.containsKey(id)) {
+			return ResponseEntity.notFound().build();
+		}
+		
 		String title = map.get(id).getTitle();
 		map.put(id, new Document(id, title, body.get("content")));
 		return ResponseEntity.noContent().build();
