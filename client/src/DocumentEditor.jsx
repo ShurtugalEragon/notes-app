@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 function DocumentEditor() {
     const [text, setText] = useState('');
     const [title, setTitle] = useState('');
+    const [deleted, setDeleted] = useState(false);
     const {id} = useParams();
     const navigate = useNavigate();
     const [status, setStatus] = useState('');
@@ -15,11 +16,16 @@ function DocumentEditor() {
 
     function handleMessage(message) {
         const body = JSON.parse(message.body);
+
         if (body.clientId === clientId.current) {
             return;
         }
 
-        console.log(`Received message: ${message}`);
+        if (body.delete === true) {
+            setDeleted(true);
+            return;
+        }
+
         setText(body.content);
     } 
 
@@ -69,13 +75,27 @@ function DocumentEditor() {
     }
 
     async function deleteDoc() {
+        client.current.publish({
+            destination: `/app/docs/${id}/edit`,
+            body: JSON.stringify({ clientId: clientId.current, delete: true})
+        });
+
         await fetch(`http://127.0.0.1:8080/docs/${id}`, {
             method: "DELETE",
             headers: {"Content-Type": "application/json"}
         });
+
         navigate("/");
     }
-
+    
+    if (deleted) {
+        return (
+            <div id="footer">
+                <p>Document was deleted</p>
+                <button onClick={() => {navigate("/")}}>Home</button>
+            </div>
+        )
+    }
     return (
         <div id="editor">
             <ul id="navbar">
