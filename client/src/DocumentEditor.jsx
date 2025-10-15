@@ -11,6 +11,7 @@ function DocumentEditor() {
     const {id} = useParams();
     const navigate = useNavigate();
     const [status, setStatus] = useState('');
+    const [connectionStatus, setConnectionStatus] = useState('');
     const client = useRef(null);
     const clientId = useRef('');
 
@@ -46,6 +47,10 @@ function DocumentEditor() {
                 },
                 onConnect: (frame) => {
                     client.current.subscribe(`/topic/docs/${id}`, handleMessage);
+                    setConnectionStatus('Connected');
+                },
+                onDisconnect: (frame) => {
+                    setConnectionStatus('Disconnected');
                 }
             });
             client.current.activate();
@@ -99,11 +104,16 @@ function DocumentEditor() {
     return (
         <div id="editor">
             <ul id="navbar">
-                <li><h1>{title}</h1></li>
-                <li><p>{status}</p></li>
+                <div id="title">
+                    <li><h1>{title}</h1></li>
+                </div>
+                <div id="statusbar">
+                    <li><p>{status}</p></li>
+                    <li><p>{connectionStatus}</p></li>
+                </div>
             </ul>
             <div>
-                <textarea value={text} onChange={e => {setText(e.target.value); saveDoc(e.target.value);}} rows="20" cols="75"/>
+                <textarea id ="text" value={text} onChange={e => {setText(e.target.value); saveDoc(e.target.value);}} rows="20" cols="75"/>
             </div>
 
             <div id="footer">

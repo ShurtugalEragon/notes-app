@@ -1,22 +1,48 @@
 #navbar {
     display: flex;
+    flex-direction: row;
     list-style-type: none;
     align-items: center;
+    padding: 0;
+    margin: 0;
+    justify-content: space-between;
+    width: 100%;
 }
 
 #navbar li {
     margin-right: 25px;
 }
 
+#title {
+    margin: 0;
+}
+
+#statusbar {
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+#statusbar p {
+    font-size: medium;
+    margin: 0;
+    padding: 0;
+}
+
 #editor {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #footer {
     display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
 }
 
 #footer button {
