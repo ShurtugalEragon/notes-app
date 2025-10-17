@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,58 +22,68 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RestController
 @RequestMapping("/docs")
 @CrossOrigin(origins = "http://localhost:5173")
-class DocumentController {
-	private Map<Integer, Document> map = new HashMap<>(Map.of(1, new Document(1, "Sample Document", "This is a sample text."), 2, new Document(2, "Another sample document", "This is another sample text")));
+public class DocumentController {
+	private final DocumentRepository documentRepository;
+	
+	public DocumentController(DocumentRepository documentRepository) {
+		this.documentRepository = documentRepository;
+	}
 	
 	@GetMapping
 	private ResponseEntity<List<DocumentSummary>> getAllDocuments() {
-		List<DocumentSummary> documentsMap = map.values().stream()
+		List<DocumentSummary> documentsMap = documentRepository.findAll().stream()
 				.map(document -> new DocumentSummary(document.getId(), document.getTitle()))
 				.toList();
 		return ResponseEntity.ok(documentsMap);
 	}
 	
 	@GetMapping("/{id}")
-	private ResponseEntity<Map<String, String>> getDocument(@PathVariable int id) {
-		if (map.containsKey(id)) {
-			return ResponseEntity.ok(Map.of("title", map.get(id).getTitle(), "content", map.get(id).getContent())); 
+	private ResponseEntity<Map<String, String>> getDocument(@PathVariable Long id) {
+		Optional<Document> document = documentRepository.findById(id);
+		
+		if (document.isPresent()) {
+			Map<String, String> response = new HashMap<>();
+			response.put("title", document.get().getTitle());
+			response.put("content", document.get().getContent());
+			
+			return ResponseEntity.ok(response); 
 		}
 		return ResponseEntity.notFound().build();
 	}
 	
 	@PutMapping("/{id}")
-	private ResponseEntity<Void> replaceDocument(@PathVariable int id, @RequestBody Map<String, String> body) {
-		if (!map.containsKey(id)) {
+	private ResponseEntity<Void> replaceDocument(@PathVariable Long id, @RequestBody Map<String, String> body) {
+		Optional<Document> document = documentRepository.findById(id);
+		
+		if (!document.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
 		
-		String title = map.get(id).getTitle();
-		map.put(id, new Document(id, title, body.get("content")));
+		if (body.containsKey("content")) {
+			document.get().setContent(body.get("content"));
+		}
+		
+		documentRepository.save(document.get());
 		return ResponseEntity.noContent().build();
 	}
 	
 	@PostMapping
 	private ResponseEntity<DocumentSummary> createDocument(@RequestBody Map<String, String> body, UriComponentsBuilder ucb) {
-		int id = map.size() + 1;
-		
-		map.put(id, new Document(id, body.get("title"), ""));
+		Document createdDocument = documentRepository.save(new Document(null,body.getOrDefault("title", "Document Title"), ""));
 		
 		URI locationOfCreatedDocument = ucb
 				.path("doc/{id}")
-				.buildAndExpand(id)
+				.buildAndExpand(createdDocument.getId())
 				.toUri();
 		
-		DocumentSummary documentSummary = new DocumentSummary(id, map.get(id).getTitle());
+		DocumentSummary documentSummary = new DocumentSummary(createdDocument.getId(), createdDocument.getTitle());
 		
 		return ResponseEntity.created(locationOfCreatedDocument).body(documentSummary);
 	}
 	
 	@DeleteMapping("/{id}")
-	private ResponseEntity<Void> deleteDocument(@PathVariable int id) {
-		if (map.containsKey(id)) {
-			map.remove(id);
-			return ResponseEntity.noContent().build();
-		}
-		return ResponseEntity.notFound().build();
+	private ResponseEntity<Void> deleteDocument(@PathVariable Long id) {
+		documentRepository.deleteById(id);
+		return ResponseEntity.noContent().build();
 	}
 }

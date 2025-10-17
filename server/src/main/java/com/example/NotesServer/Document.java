@@ -1,11 +1,20 @@
 package com.example.NotesServer;
 
-class Document {
-	private int id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
+public class Document {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
 	private String title;
 	private String content;
 	
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 	
@@ -17,7 +26,15 @@ class Document {
 		return content;
 	}
 	
-	Document(int id, String title, String content) {
+	public void setContent(String content) {
+		this.content = content;
+	}
+	
+	public Document() {
+		
+	}
+	
+	Document(Long id, String title, String content) {
 		this.id = id;
 		this.title = title;
 		this.content = content;

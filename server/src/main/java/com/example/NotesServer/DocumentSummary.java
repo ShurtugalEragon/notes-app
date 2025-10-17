@@ -1,10 +1,10 @@
 package com.example.NotesServer;
 
 class DocumentSummary {
-	private int id;
-	private String title;
+	private final Long id;
+	private final String title;
 	
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 	
@@ -12,7 +12,7 @@ class DocumentSummary {
 		return title;
 	}
 	
-	DocumentSummary(int id, String title) {
+	DocumentSummary(Long id, String title) {
 		this.id = id;
 		this.title = title;
 	}
