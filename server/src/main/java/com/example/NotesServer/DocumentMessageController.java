@@ -11,6 +11,8 @@ class DocumentMessageController {
 	@MessageMapping("/docs/{id}/edit")
 	@SendTo("/topic/docs/{id}")
 	private DocumentMessage sendMessage(DocumentMessage documentMessage) {
-		return documentMessage;
+		String safeContent = HtmlSanitizerUtil.sanitize(documentMessage.getContent());
+		DocumentMessage safeDocumentMessage = new DocumentMessage(safeContent, documentMessage.getClientId(), documentMessage.getDelete());
+		return safeDocumentMessage;
 	}
 }

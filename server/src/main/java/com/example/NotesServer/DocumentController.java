@@ -60,7 +60,8 @@ public class DocumentController {
 		}
 		
 		if (body.containsKey("content")) {
-			document.get().setContent(body.get("content"));
+			String safeContent = HtmlSanitizerUtil.sanitize(body.get("content"));
+			document.get().setContent(safeContent);
 		}
 		
 		documentRepository.save(document.get());

@@ -27,6 +27,8 @@ function DocumentEditor() {
             return;
         }
 
+        console.log(body.content);
+
         setText(body.content);
     } 
 
