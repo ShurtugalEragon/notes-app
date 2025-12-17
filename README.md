@@ -10,3 +10,4 @@ How to build:
 2. git clone https://github.com/ShurtugalEragon/notes-app.git
 3. cd notes-app
 4. docker compose up
+5. Go to localhost:5173
