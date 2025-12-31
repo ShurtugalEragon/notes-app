@@ -1,0 +1,1 @@
+INSERT INTO Document (id, title, content) VALUES (1, 'Document 1', 'Document 1 Content');
