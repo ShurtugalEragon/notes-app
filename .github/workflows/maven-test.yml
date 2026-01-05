@@ -27,4 +27,4 @@ jobs:
         cache: maven
     - name: Test with Maven
       working-directory: ./server
-      run: mvn test
+      run: mvn -B test
