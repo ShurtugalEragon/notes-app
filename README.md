@@ -23,4 +23,4 @@ First, git clone https://github.com/ShurtugalEragon/notes-app.git
 
         1. Install docker on your machine
         2. In notes-app directory, run 'docker compose up'
-        3. Go to localhost:5173
+        3. Go to localhost:5173 
