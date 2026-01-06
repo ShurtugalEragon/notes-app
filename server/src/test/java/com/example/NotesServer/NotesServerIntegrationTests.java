@@ -27,4 +27,58 @@ class NotesServerIntegrationTests {
 			.exchange()
 			.expectStatus().isOk();
 	}
+	
+	@Test
+	void shouldGetDocumentList() {
+		restTestClient
+			.get().uri("/docs")
+			.exchange()
+			.expectStatus().isOk()
+			.expectBody()
+			.jsonPath("$.length()").isEqualTo(2);
+	}
+	
+	@Test
+	void shouldCreateDocument() {
+		Document document = new Document(null, "Document 3", "");
+		
+		restTestClient
+			.post().uri("/docs")
+			.body(document)
+			.exchange()
+			.expectStatus().isCreated()
+			.expectBody();
+	}
+	
+	@Test
+	void shouldDeleteDocument() {
+		restTestClient
+			.delete().uri("docs/1")
+			.exchange()
+			.expectStatus().isNoContent();
+		
+		restTestClient
+			.get().uri("docs/1")
+			.exchange()
+			.expectStatus().isNotFound();
+	}
+	
+	@Test
+	void shouldUpdateDocument() {
+		String updatedContent = "This is the updated content";
+		Document updatedDocument = new Document(null, null, updatedContent);
+		
+		restTestClient
+			.put().uri("docs/2")
+			.body(updatedDocument)
+			.exchange()
+			.expectStatus().isNoContent();
+		
+		restTestClient
+			.get().uri("docs/2")
+			.exchange()
+			.expectStatus().isOk()
+			.expectBody()
+			.jsonPath("$.content").isEqualTo(updatedContent);
+	}
 }
